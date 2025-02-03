@@ -6,51 +6,101 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/pointing.h>
 
 / {
-        keymap {
-                compatible = "zmk,keymap";
+    behaviors {
+        Hold_Tap: Hold_Tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOLD_TAP";
+            bindings = <&mo>, <&kp>;
 
-                default_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
-                        bindings = <
-   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                  &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-                        >;
-                };
-                lower_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                    &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
-                        >;
-                };
-
-                raise_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                             &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
-                        >;
-                };
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "hold-preferred";
         };
+
+        Mod_Tap: Mod_Tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOD_TAP";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+        };
+    };
+
+    macros {
+        Copy: Copy {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LC(C)>;
+            label = "COPY";
+        };
+
+        Paste: Paste {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LC(V)>;
+            label = "PASTE";
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BSPC |
+            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
+            //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+
+            bindings = <
+&kp TAB    &kp Q  &kp W             &kp E  &kp R  &kp T                &kp Y                  &kp U      &kp I      &kp O                 &Mod_Tap POUND P  &kp DELETE
+&kp LCTRL  &kp A  &mt LEFT_SHIFT S  &kp D  &kp F  &kp G                &kp H                  &kp J      &kp K      &mt RIGHT_SHIFT L     &kp SEMI          &kp SQT
+&kp LSHFT  &kp Z  &kp X             &kp C  &kp V  &kp B                &kp N                  &kp M      &kp COMMA  &Mod_Tap EXCL PERIOD  &kp FSLH          &kp ESC
+                                    &mo 3  &mo 3  &Hold_Tap 2 SPACE    &Hold_Tap 1 BACKSPACE  &kp ENTER  &kp RALT
+            >;
+        };
+
+        lower_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BSPC |
+            // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
+            // | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
+            //                    | GUI |     | SPC |   | ENT |     | ALT |
+
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &Copy     &trans  &trans    &kp UP_ARROW  &trans     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &Paste    &trans  &kp LEFT  &kp DOWN      &kp RIGHT  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans    &trans        &trans     &trans  &trans
+                        &trans  &trans  &trans    &trans  &trans    &trans
+            >;
+        };
+
+        raise_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BSPC |
+            // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
+            // | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
+            //                    | GUI |     | SPC |   | ENT |     | ALT |
+
+            bindings = <
+&trans  &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp KP_EQUAL       &kp UNDER  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp LPAR  &kp RPAR  &kp BSPC
+&trans  &trans    &trans  &trans    &trans    &kp PLUS           &kp MINUS  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &kp RBKT  &kp BSLH  &kp GRAVE
+&trans  &trans    &trans  &trans    &trans    &kp KP_SUBTRACT    &trans     &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp RBRC  &kp PIPE  &kp TILDE
+                          &kp LGUI  &trans    &kp SPACE          &trans     &trans                &kp RALT
+            >;
+        };
+
+        layer_3 {
+            bindings = <
+&trans  &trans  &trans          &mmv MOVE_UP    &trans           &trans    &kp DOLLAR  &kp N7        &kp N8        &kp N9        &trans  &trans
+&trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &trans    &trans      &kp NUMBER_4  &kp N5        &kp NUMBER_6  &trans  &trans
+&trans  &trans  &trans          &trans          &trans           &trans    &trans      &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans
+                                &trans          &trans           &trans    &trans      &kp N0        &trans
+            >;
+        };
+    };
 };
